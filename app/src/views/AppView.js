@@ -39,9 +39,8 @@ define(function(require, exports, module) {
         });
 
         node.on('click', function() {
-            node.setProperties({
-                backgroundColor: Random.hex()
-            });
+            main.setProperties({ backgroundColor: Random.hex() });
+            node.setProperties({ backgroundColor: Random.hex() });
         });
 
         this.gain = this.add(gain);

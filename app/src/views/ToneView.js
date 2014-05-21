@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var StateModifier = require('famous/modifiers/StateModifier');
 
     var Random = require('math/Random');
+    var Tone = require('sound/Tone');
 
     var notesHash = {
         'C0': 16.35,
@@ -168,46 +169,45 @@ define(function(require, exports, module) {
             origin: [0.5, 0.5],
             align: [0.5, 0.5],
             properties: {
-                backgroundColor: Random.hex(),
+                backgroundColor: '#666',
+                border: '1px solid #222',
                 boxShadow: '0 0 10px 1px rgba(0,0,0,0.25)',
                 cursor: 'pointer',
                 zIndex: 1
             }
         });
 
-        var ctx = new AudioContext();
+        var context = this.options.context;
+        var frequency = notesHash[notesKeys[Random.integer(notesKeys.length)]];
+        var type = waveForms[Random.integer(waveForms.length)];
+        var volume = 1;
 
-        var node;
-        var gain;
+        var tone = new Tone({
+            context: context,
+            frequency: frequency,
+            type: type,
+            volume: volume
+        });
 
-        function start() {
-            if (node) { node.stop(); }
-
-            node = ctx.createOscillator();
-            gain = ctx.createGain();
-
-            node.frequency.value = notesHash[notesKeys[Random.integer(notesKeys.length)]];
-            node.type = waveForms[Random.integer(waveForms.length)];
-            node.start();
-            gain.gain.value = 0.5;
-
-            node.connect(gain);
-            gain.connect(ctx.destination);
-        }
-
-        function stop() {
-            node.stop();
-            gain.gain.value = 0;
-
-            node = null;
-            gain = null;
-        }
+        var isEnabled = false;
 
         bttn.on('click', function() {
-            bttn.setProperties({ backgroundColor: Random.hex() });
+            isEnabled = !isEnabled;
+
+            var props = (isEnabled) ? {
+                backgroundColor: '#e7e7e7',
+                border: '1px solid #fafafa',
+                boxShadow: '0 0 10px 2px rgba(0,0,0,0.45)'
+            } : {
+                backgroundColor: '#666',
+                border: '1px solid #222',
+                boxShadow: '0 0 10px 1px rgba(0,0,0,0.25)'
+            }
+
+            bttn.setProperties(props);
         });
-        bttn.on('mousedown', function() { start(); });
-        bttn.on('mouseup', function() { stop(); });
+        // bttn.on('mousedown', function() { tone.start(); });
+        // bttn.on('mouseup', function() { tone.stop(); });
 
         this.add(bttn);
     }

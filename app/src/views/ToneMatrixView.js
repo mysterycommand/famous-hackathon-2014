@@ -27,8 +27,12 @@ define(function(require, exports, module) {
         var tones = [];
         grid.sequenceFrom(tones);
 
+        var context = new AudioContext();
+
         for (var i = 0, len = d * d; i < len; ++i) {
-            tones.push(new ToneView());
+            tones.push(new ToneView({
+                context: context
+            }));
         }
 
         this.add(grid);

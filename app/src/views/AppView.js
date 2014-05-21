@@ -148,6 +148,12 @@ define(function(require, exports, module) {
         'C8': 4186.01
     };
     var notesKeys = Object.keys(notesHash);
+    var waveForms = [
+        'sine',
+        'square',
+        'sawtooth',
+        'triangle'
+    ];
 
     /*
      * @name AppView
@@ -191,6 +197,7 @@ define(function(require, exports, module) {
             gain = ctx.createGain();
 
             node.frequency.value = notesHash[notesKeys[Random.integer(notesKeys.length)]];
+            node.type = waveForms[Random.integer(waveForms.length)];
             node.start();
             gain.gain.value = 0.5;
 

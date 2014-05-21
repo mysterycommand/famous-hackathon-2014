@@ -47,6 +47,8 @@ define(function(require, exports, module) {
     }
 
     function _stop(delay) {
+        if ( ! this.oscillator) { return; }
+
         this.oscillator.stop(delay);
         this.gain.gain.value = 0;
     }

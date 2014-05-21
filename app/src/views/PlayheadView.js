@@ -19,6 +19,7 @@ define(function(require, exports, module) {
             properties: {
                 backgroundColor: 'rgba(255,0,0,0.45)',
                 boxShadow: '0 0 30px 3px rgba(0,0,0,0.65)',
+                pointerEvents: 'none',
                 zIndex: 2
             }
         });

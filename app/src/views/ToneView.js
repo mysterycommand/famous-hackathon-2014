@@ -164,50 +164,30 @@ define(function(require, exports, module) {
     function ToneView() {
         View.apply(this, arguments);
 
-        var bttn = new Surface({
+        var bttn = this.bttn = new Surface({
             size: [32, 32],
             origin: [0.5, 0.5],
             align: [0.5, 0.5],
             properties: {
-                backgroundColor: '#666',
-                border: '1px solid #222',
-                boxShadow: '0 0 10px 1px rgba(0,0,0,0.25)',
                 cursor: 'pointer',
                 zIndex: 1
             }
         });
 
         var context = this.options.context;
-        var frequency = notesHash[notesKeys[Random.integer(notesKeys.length)]];
-        var type = waveForms[Random.integer(waveForms.length)];
-        var volume = 1;
+        var frequency = this.options.frequency;
+        var type = this.options.type;
+        var volume = this.options.volume;
 
-        var tone = new Tone({
+        var tone = this.tone = new Tone({
             context: context,
             frequency: frequency,
             type: type,
             volume: volume
         });
 
-        var isEnabled = false;
-
-        bttn.on('click', function() {
-            isEnabled = !isEnabled;
-
-            var props = (isEnabled) ? {
-                backgroundColor: '#e7e7e7',
-                border: '1px solid #fafafa',
-                boxShadow: '0 0 10px 2px rgba(0,0,0,0.45)'
-            } : {
-                backgroundColor: '#666',
-                border: '1px solid #222',
-                boxShadow: '0 0 10px 1px rgba(0,0,0,0.25)'
-            }
-
-            bttn.setProperties(props);
-        });
-        // bttn.on('mousedown', function() { tone.start(); });
-        // bttn.on('mouseup', function() { tone.stop(); });
+        this.disable();
+        bttn.on('click', this.toggle.bind(this));
 
         this.add(bttn);
     }
@@ -215,7 +195,40 @@ define(function(require, exports, module) {
     ToneView.prototype = Object.create(View.prototype);
     ToneView.prototype.constructor = ToneView;
 
+    ToneView.prototype.enable = function enable() {
+        this.isEnabled = true;
+        this.bttn.setProperties({
+            backgroundColor: '#e7e7e7',
+            border: '1px solid #fafafa',
+            boxShadow: '0 0 10px 2px rgba(0,0,0,0.45)'
+        });
+    };
+
+    ToneView.prototype.disable = function disable() {
+        this.isEnabled = false;
+        this.bttn.setProperties({
+            backgroundColor: '#666',
+            border: '1px solid #222',
+            boxShadow: '0 0 10px 1px rgba(0,0,0,0.25)'
+        });
+    };
+
+    ToneView.prototype.toggle = function toggle() {
+        (this.isEnabled) ? this.disable() : this.enable();
+    };
+
+    ToneView.prototype.play = function play(duration) {
+        var tone = this.tone;
+        tone.start();
+
+        setTimeout(function() { tone.stop(); }, duration);
+    };
+
     ToneView.DEFAULT_OPTIONS = {
+        context: new AudioContext(),
+        frequency: notesHash[notesKeys[Random.integer(notesKeys.length)]],
+        type: waveForms[Random.integer(waveForms.length)],
+        volume: 0.5
     };
 
     module.exports = ToneView;

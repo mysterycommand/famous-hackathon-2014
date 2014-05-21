@@ -32,9 +32,11 @@ define(function(require, exports, module) {
         var w = main.getSize()[1];
         var s = w / 16;
         var c = 0;
+        var cx = 0;
 
         var bpm = 120;
-        var measure = ((60 * 1000) / bpm) * 16
+        var beat = (60 * 1000) / bpm;
+        var measure = beat * 16
 
         var playheadModifier = new Modifier({
             transform: function() {
@@ -42,13 +44,15 @@ define(function(require, exports, module) {
                 t = Date.now();
 
                 x += (w / measure) * d;
-                c = Math.floor((x / w) * s) * s - 4;
-                if (c >= w - s) {
+                c = Math.floor((x / w) * s);
+                cx = (c * s) - 4;
+                if (cx >= w - s) {
                     x = 0;
-                    c = -4;
+                    cx = -4;
                 }
 
-                return Transform.translate(c, -4, 0);
+                matrixView.playColumn(c, beat / 2);
+                return Transform.translate(cx, -4, 0);
             }
         });
 

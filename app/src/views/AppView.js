@@ -169,7 +169,7 @@ define(function(require, exports, module) {
         });
 
         var bttn = new Surface({
-            size: [100, 100],
+            size: [50, 50],
             origin: [0.5, 0.5],
             align: [0.5, 0.5],
             properties: {
@@ -181,32 +181,29 @@ define(function(require, exports, module) {
 
         var ctx = new AudioContext();
 
-        var node = ctx.createScriptProcessor(1024, 0, 1);
-        var frequency = notesHash[notesKeys[Random.integer(notesKeys.length)]];
-        var volume = 0.5;
-        var time, d;
-
-        function onAudioProcess(event) {
-            var buffer = event.outputBuffer;
-            var data = buffer.getChannelData(0);
-            var sampleTime;
-
-            for (var i = 0, len = buffer.length; i < len; ++ i) {
-                sampleTime = ctx.currentTime + buffer.duration * i / len;
-                data[i] = volume * Math.sin(sampleTime * frequency * Math.PI * 2);
-            }
-        }
+        var node;
+        var gain;
 
         function start() {
-            time = ctx.currentTime;
-            frequency = notesHash[notesKeys[Random.integer(notesKeys.length)]];
-            node.addEventListener('audioprocess', onAudioProcess, false);
-            node.connect(ctx.destination);
+            if (node) { node.stop(); }
+
+            node = ctx.createOscillator();
+            gain = ctx.createGain();
+
+            node.frequency.value = notesHash[notesKeys[Random.integer(notesKeys.length)]];
+            node.start();
+            gain.gain.value = 0.5;
+
+            node.connect(gain);
+            gain.connect(ctx.destination);
         }
 
         function stop() {
-            node.removeEventListener('audioprocess', onAudioProcess, false);
-            node.disconnect();
+            node.stop();
+            gain.gain.value = 0;
+
+            node = null;
+            gain = null;
         }
 
         bttn.on('click', function() {

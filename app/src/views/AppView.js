@@ -33,7 +33,7 @@ define(function(require, exports, module) {
             align: [0.5, 0.5],
             properties: {
                 backgroundColor: Random.hex(),
-                boxShadow: '0 0 30px 1px rgba(0,0,0,0.35)',
+                boxShadow: '0 0 100px 10px rgba(0,0,0,0.25)',
                 cursor: 'pointer'
             }
         });

@@ -17,17 +17,17 @@ define(function(require, exports, module) {
     function AppView() {
         View.apply(this, arguments);
 
-        var gain = new StateModifier({
+        var main = new StateModifier({
             origin: [0.5, 0.5]
         });
 
-        var main = new Surface({
+        var bkgd = new Surface({
             properties: {
                 backgroundColor: Random.hex()
             }
         });
 
-        var node = new Surface({
+        var bttn = new Surface({
             size: [100, 100],
             origin: [0.5, 0.5],
             align: [0.5, 0.5],
@@ -38,14 +38,14 @@ define(function(require, exports, module) {
             }
         });
 
-        node.on('click', function() {
-            main.setProperties({ backgroundColor: Random.hex() });
-            node.setProperties({ backgroundColor: Random.hex() });
+        bttn.on('click', function() {
+            bkgd.setProperties({ backgroundColor: Random.hex() });
+            bttn.setProperties({ backgroundColor: Random.hex() });
         });
 
-        this.gain = this.add(gain);
-        this.gain.add(main);
-        this.gain.add(node);
+        this.main = this.add(main);
+        this.main.add(bkgd);
+        this.main.add(bttn);
     }
 
     AppView.prototype = Object.create(View.prototype);

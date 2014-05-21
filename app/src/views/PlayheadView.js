@@ -15,11 +15,9 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         var line = new Surface({
-            size: [1, undefined],
-            origin: [0.5, 0.5],
-            align: [0.5, 0.5],
+            size: [40, undefined],
             properties: {
-                backgroundColor: 'red',
+                backgroundColor: 'rgba(255,0,0,0.45)',
                 boxShadow: '0 0 30px 3px rgba(0,0,0,0.65)',
                 zIndex: 2
             }

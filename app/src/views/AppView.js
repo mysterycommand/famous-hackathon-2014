@@ -30,14 +30,25 @@ define(function(require, exports, module) {
         var d;
         var x = 0;
         var w = main.getSize()[1];
+        var s = w / 16;
+        var c = 0;
+
+        var bpm = 120;
+        var measure = ((60 * 1000) / bpm) * 16
+
         var playheadModifier = new Modifier({
-            translate: function() {
+            transform: function() {
                 d = Date.now() - t;
                 t = Date.now();
-                x += (w / 1000) * d;
-                if (x > w) { x = 0; }
-                console.log(x);
-                return Transform.translate(x, -2, -100);
+
+                x += (w / measure) * d;
+                c = Math.floor((x / w) * s) * s - 4;
+                if (c >= w - s) {
+                    x = 0;
+                    c = -4;
+                }
+
+                return Transform.translate(c, -4, 0);
             }
         });
 

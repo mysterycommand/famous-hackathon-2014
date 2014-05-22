@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 
     var Tone = function Tone(opts) {
         this.context = opts.context;
+        this.compressor = opts.compressor;
         this.frequency = opts.frequency;
         this.type = opts.type;
         this.volume = opts.volume;
@@ -16,6 +17,7 @@ define(function(require, exports, module) {
     Tone.prototype.start = function start(delay) {
         delay || (delay = 0);
         if (this.oscillator) { this.stop(); }
+        // console.log(this.frequency, this.type, this.volume);
 
         _create.call(this);
         _start.call(this, delay);
@@ -43,7 +45,7 @@ define(function(require, exports, module) {
 
     function _connect() {
         this.oscillator.connect(this.gain);
-        this.gain.connect(this.context.destination);
+        this.gain.connect(this.compressor);
     }
 
     function _stop(delay) {

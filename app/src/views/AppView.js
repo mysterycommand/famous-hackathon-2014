@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         var c = 0;
         var cx = 0;
 
-        var bpm = 120;
+        var bpm = 160;
         var beat = (60 * 1000) / bpm;
         var measure = beat * 16
 
@@ -45,14 +45,14 @@ define(function(require, exports, module) {
 
                 x += (w / measure) * d;
                 c = Math.floor((x / w) * s);
-                cx = (c * s) - 4;
-                if (cx >= w - s) {
+                cx = (c * s);
+                if (cx > w - s) {
                     x = 0;
-                    cx = -4;
+                    cx = 0;
                 }
 
                 matrixView.playColumn(c, beat / 2);
-                return Transform.translate(cx, -4, 0);
+                return Transform.translate(cx, 0, 1);
             }
         });
 

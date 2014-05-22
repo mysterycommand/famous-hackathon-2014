@@ -35,28 +35,42 @@ define(function(require, exports, module) {
         grid.sequenceFrom(tones);
 
         var context = new AudioContext();
+        var masterGain = context.createGain();
+        var compressor = context.createDynamicsCompressor();
+
+        masterGain.gain.value = 0.75;
+        masterGain.connect(compressor);
+        compressor.connect(context.destination);
+
+        var type = waveForms[Random.integer(0, waveForms.length - 1)];
+        var notes = [1,3,4,5,7,8,10,11,12,14,15,17,18,19,21,22];
 
         for (var i = 0, cols = d; i < cols; ++i) {
             for (var j = 0, rows = d; j < rows; ++j) {
+                var note = (rows - i); // notes[rows - 1 - i];
+                var frequency = 440 * Math.pow(2, (note + 59) / 12 - 6);
+                // console.log(i, note, frequency);
+
                 tones.push(new ToneView({
                     context: context,
-                    frequency: 196 * (rows - i),
-                    type: waveForms[Random.integer(waveForms.length)],
-                    volume: (i + rows / 2) / rows
+                    compressor: masterGain,
+                    frequency: frequency,
+                    type: 'sawtooth',
+                    volume: 0.5
                 }));
             }
         }
 
-        if (Random.bool()) {
-            for (var k = 0, len = d; k < len; ++k) {
-                tones[k + k * d].enable();
-            }
-        } else {
-            for (var k = 0, len = d; k < len; ++k) {
-                if (Random.bool()) { tones[k + Random.integer(hd) * hd].toggle(); }
-                if (Random.bool()) { tones[k + Random.integer(hd, d) * (d - 1)].toggle(); }
-            }
-        }
+        // if (Random.bool()) {
+        //     for (var k = 0, len = d; k < len; ++k) {
+        //         tones[k + k * d].enable();
+        //     }
+        // } else {
+        //     for (var k = 0, len = d; k < len; ++k) {
+        //         if (Random.bool()) { tones[k + Random.integer(hd) * hd].toggle(); }
+        //         if (Random.bool()) { tones[k + Random.integer(hd, d) * (d - 1)].toggle(); }
+        //     }
+        // }
 
         this.add(grid);
     }
@@ -65,6 +79,9 @@ define(function(require, exports, module) {
     ToneMatrixView.prototype.constructor = ToneMatrixView;
 
     ToneMatrixView.prototype.playColumn = function playColumn(col, duration) {
+        if (this.col === col) { return; }
+        this.col = col;
+
         for (var i = col, len = this.tones.length; i < len; i += this.d) {
             var toneView = this.tones[i];
             if (toneView.isEnabled) {

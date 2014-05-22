@@ -1,7 +1,7 @@
-#hackathon
+#Famous Hackathon 2014
 > Something with Famous and the Web Audio API.
 
-[![Build Status](https://travis-ci.org/mysterycommand/hackathon.svg?branch=master)](https://travis-ci.org/mysterycommand/hackathon) [![Dependency Status](https://david-dm.org/mysterycommand/hackathon.svg)](https://david-dm.org/mysterycommand/hackathon) [![devDependency Status](https://david-dm.org/mysterycommand/hackathon/dev-status.svg)](https://david-dm.org/mysterycommand/hackathon#info=devDependencies)
+[![Build Status](https://travis-ci.org/mysterycommand/famous-hackathon-2014.svg?branch=master)](https://travis-ci.org/mysterycommand/famous-hackathon-2014) [![Dependency Status](https://david-dm.org/mysterycommand/famous-hackathon-2014.svg)](https://david-dm.org/mysterycommand/famous-hackathon-2014) [![devDependency Status](https://david-dm.org/mysterycommand/hackathon/dev-status.svg)](https://david-dm.org/mysterycommand/hackathon#info=devDependencies)
 
 ##Dependencies
 It is actually quite simple really

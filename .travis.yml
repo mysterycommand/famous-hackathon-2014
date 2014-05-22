@@ -1,8 +1,34 @@
 language: node_js
 node_js:
-  - '0.10'
-before_install:
+  - 0.10.x
+notifications:
+  irc: "irc.freenode.org#generator-travis-ci"
+branches:
+  only:
+    - master
+env:
+  global:
+    - secure: "GX7QlOBN0bJ3MW95+2C089rwbdDhKisiZyC5A9Uo4Y97RXAf3Aa02AlWTfHBo2St0/k1u8zf5j+JfQ5UjrgSO4QiTVDqoL5O/N18J18a7N/zepIY5zfsyt8shZ9W8uHDpPoDXbFG7sUFd2qyr1QuoV+Ljp+87ehfRHHXAX97m8c="
+    - GH_OWNER: mysterycommand
+    - GH_PROJECT_NAME: famous-hackathon-2014
+before_script:
+  - gem update --system
+  - gem install compass
   - currentfolder=${PWD##*/}
   - if [ "$currentfolder" != 'generator-famous' ]; then cd .. && eval "mv $currentfolder generator-famous" && cd generator-famous; fi
   - npm install -g grunt-cli bower
-
+script:
+  - bower install
+  - grunt
+after_success:
+  - git submodule add -b gh-pages https://${GH_OAUTH_TOKEN}@github.com/${GH_OWNER}/${GH_PROJECT_NAME} site > /dev/null 2>&1
+  - cd site
+  - if git checkout gh-pages; then git checkout -b gh-pages; fi
+  - git rm -r .
+  - cp -R ../dist/* .
+  - cp ../dist/.* .
+  - git add -f .
+  - git config user.email "matt@mysterycommand.com"
+  - git config user.name "Matt Hayes"
+  - git commit -am "adding the yeoman build files to gh-pages [ci skip]"
+  - git push https://${GH_OAUTH_TOKEN}@github.com/${GH_OWNER}/${GH_PROJECT_NAME} HEAD:gh-pages > /dev/null 2>&1

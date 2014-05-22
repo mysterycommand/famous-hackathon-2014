@@ -11,7 +11,7 @@ define(function(require, exports, module) {
     // var Random = require('math/Random');
     var Tone = require('sound/Tone');
 
-    var AudioContext = window.AudioContext;
+    // var AudioContext = window.AudioContext;
 
     /*
      * @name ToneView
@@ -124,7 +124,7 @@ define(function(require, exports, module) {
     };
 
     ToneView.DEFAULT_OPTIONS = {
-        context: new AudioContext(),
+        // context: new AudioContext(),
         // frequency: notesHash[notesKeys[Random.integer(notesKeys.length)]],
         // type: waveForms[Random.integer(waveForms.length)],
         volume: 0.5

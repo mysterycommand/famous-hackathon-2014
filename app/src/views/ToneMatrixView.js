@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
     var ToneView = require('views/ToneView');
 
-    var AudioContext = window.AudioContext;
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
 
     var waveForms = [
         'sine',

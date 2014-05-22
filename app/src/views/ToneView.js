@@ -4,12 +4,14 @@ define(function(require, exports, module) {
     var Surface = require('famous/core/Surface');
     var Transform = require('famous/core/Transform');
     var Modifier = require('famous/core/Modifier');
-    var StateModifier = require('famous/modifiers/StateModifier');
+    // var StateModifier = require('famous/modifiers/StateModifier');
     var Transitionable = require('famous/transitions/Transitionable');
-    var SnapTransition = require('famous/transitions/SnapTransition')
+    var SnapTransition = require('famous/transitions/SnapTransition');
 
-    var Random = require('math/Random');
+    // var Random = require('math/Random');
     var Tone = require('sound/Tone');
+
+    var AudioContext = window.AudioContext;
 
     /*
      * @name ToneView
@@ -46,7 +48,7 @@ define(function(require, exports, module) {
         var type = this.options.type;
         var volume = this.options.volume;
 
-        var tone = this.tone = new Tone({
+        this.tone = new Tone({
             context: context,
             compressor: compressor,
             frequency: frequency,
@@ -86,6 +88,7 @@ define(function(require, exports, module) {
     };
 
     ToneView.prototype.toggle = function toggle() {
+        /* eslint no-unused-expressions:0 */
         (this.isEnabled) ? this.disable() : this.enable();
     };
 
@@ -93,7 +96,9 @@ define(function(require, exports, module) {
         var tone = this.tone;
         tone.start();
 
-        setTimeout(function() { tone.stop(); }, duration);
+        setTimeout(function() {
+            tone.stop();
+        }, duration);
 
         // this.modifier.setTransform(Transform.translate(0, 0, 100), {
         //     method: 'snap',

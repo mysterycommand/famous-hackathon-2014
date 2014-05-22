@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-    var Tone = function Tone(opts) {
+    function Tone(opts) {
         this.context = opts.context;
         this.compressor = opts.compressor;
         this.frequency = opts.frequency;
@@ -9,27 +9,10 @@ define(function(require, exports, module) {
 
         this.oscillator = null;
         this.gain = null;
-    };
+    }
 
     Tone.prototype = Object.create(Object.prototype);
     Tone.prototype.constructor = Tone;
-
-    Tone.prototype.start = function start(delay) {
-        delay || (delay = 0);
-        if (this.oscillator) { this.stop(); }
-        // console.log(this.frequency, this.type, this.volume);
-
-        _create.call(this);
-        _start.call(this, delay);
-        _connect.call(this);
-    }
-
-    Tone.prototype.stop = function stop(delay) {
-        delay || (delay = 0);
-
-        _stop.call(this, delay);
-        _destroy.call(this);
-    }
 
     function _create() {
         this.oscillator = this.context.createOscillator();
@@ -49,7 +32,7 @@ define(function(require, exports, module) {
     }
 
     function _stop(delay) {
-        if ( ! this.oscillator) { return; }
+        if (!this.oscillator) return;
 
         this.oscillator.stop(delay);
         this.gain.gain.value = 0;
@@ -59,6 +42,24 @@ define(function(require, exports, module) {
         this.oscillator = null;
         this.gain = null;
     }
+
+    Tone.prototype.start = function start(delay) {
+        /* eslint no-unused-expressions:0 */
+        delay || (delay = 0);
+        if (this.oscillator) this.stop();
+
+        _create.call(this);
+        _start.call(this, delay);
+        _connect.call(this);
+    };
+
+    Tone.prototype.stop = function stop(delay) {
+        /* eslint no-unused-expressions:0 */
+        delay || (delay = 0);
+
+        _stop.call(this, delay);
+        _destroy.call(this);
+    };
 
     module.exports = Tone;
 });

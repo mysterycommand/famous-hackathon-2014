@@ -1,7 +1,7 @@
 /*globals define*/
 define(function(require, exports, module) {
     var View = require('famous/core/View');
-    var Surface = require('famous/core/Surface');
+    // var Surface = require('famous/core/Surface');
     // var Transform = require('famous/core/Transform');
     // var StateModifier = require('famous/modifiers/StateModifier');
     var GridLayout = require('famous/views/GridLayout');
@@ -9,6 +9,9 @@ define(function(require, exports, module) {
     var Random = require('math/Random');
 
     var ToneView = require('views/ToneView');
+
+    var AudioContext = window.AudioContext;
+
     var waveForms = [
         'sine',
         'square',
@@ -43,9 +46,9 @@ define(function(require, exports, module) {
         compressor.connect(context.destination);
 
         var type = waveForms[Random.integer(0, waveForms.length - 1)];
-        var notes = [1,3,4,5,7,8,10,11,12,14,15,17,18,19,21,22];
+        // var notes = [1,3,4,5,7,8,10,11,12,14,15,17,18,19,21,22];
 
-        for (var i = 0, cols = d; i < cols; ++i) {
+        for (var i = 0, cols = d; i < cols; ++i)
             for (var j = 0, rows = d; j < rows; ++j) {
                 var note = (rows - i); // notes[rows - 1 - i];
                 var frequency = 440 * Math.pow(2, (note + 59) / 12 - 6);
@@ -55,22 +58,15 @@ define(function(require, exports, module) {
                     context: context,
                     compressor: masterGain,
                     frequency: frequency,
-                    type: 'sawtooth',
+                    type: type,
                     volume: 0.5
                 }));
             }
-        }
 
-        // if (Random.bool()) {
-        //     for (var k = 0, len = d; k < len; ++k) {
-        //         tones[k + k * d].enable();
-        //     }
-        // } else {
-        //     for (var k = 0, len = d; k < len; ++k) {
-        //         if (Random.bool()) { tones[k + Random.integer(hd) * hd].toggle(); }
-        //         if (Random.bool()) { tones[k + Random.integer(hd, d) * (d - 1)].toggle(); }
-        //     }
-        // }
+        for (var k = 0, len = d; k < len; ++k) {
+            if (Random.bool()) tones[k + Random.integer(hd) * hd].toggle();
+            if (Random.bool()) tones[k + Random.integer(hd, d) * (d - 1)].toggle();
+        }
 
         this.add(grid);
     }
@@ -79,14 +75,12 @@ define(function(require, exports, module) {
     ToneMatrixView.prototype.constructor = ToneMatrixView;
 
     ToneMatrixView.prototype.playColumn = function playColumn(col, duration) {
-        if (this.col === col) { return; }
+        if (this.col === col) return;
         this.col = col;
 
         for (var i = col, len = this.tones.length; i < len; i += this.d) {
             var toneView = this.tones[i];
-            if (toneView.isEnabled) {
-                toneView.play(duration);
-            }
+            if (toneView.isEnabled) toneView.play(duration);
         }
     };
 
